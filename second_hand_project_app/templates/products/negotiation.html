@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static%} 
+{% load crispy_forms_tags %}
+{% block content%}
+
+    {%for nego in negotiation%}
+    <div class="card" style="margin: 40px auto ; width: 30%; padding:10px ; border-top: solid; border-radius: 15px;">
+        <p class="card-text"> From : <b>{{nego.author}}</b> To : <b>{{nego.sent_to}}</b></p>
+        <p class="card-text">Product Price: ${{nego.order_item.product.price}}</p> 
+        <a href="{% url 'nego_results' nego.order_item.id%}">Go to bargaining page</a>
+        <p class="card-text">bargain : {{nego.body}}</p>
+        <p class="card-text"></p>
+    </div>
+
+    {% endfor%}
+    
+{% endblock %}

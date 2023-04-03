@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content%}
+
+        <div class="container" style="margin: 60px auto; width: 60%;"> 
+            <h1>Purchase History</h1>
+            {% for order in order_item %}
+            {% for item in order.orderitem_set.all%}
+            <div class="card-body" style="border-bottom: 1px rgb(182, 180, 180) solid ;">
+                <h5 class="card-title">{{item.product.name}}</h5>
+                <p class="card-text">Items :  <b>x{{item.quantity}}</b></p>
+                {% if item.agreed_price %}
+                <p class="card-text">Price :  <b>${{item.agreed_price}}</b></p>
+                {% else %}
+                <p class="card-text">Price :  <b>${{item.product.price}}</b></p>
+                {% endif%}
+                <p class="card-text">date ordered:  <b>{{order.order_date}}</b></p>
+            </div>
+            {%endfor%}
+            {%endfor%}
+        </div>
+
+
+{% endblock %}

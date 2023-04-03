@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static%}
+{% block content%}
+<div class="container" style="margin: 60px auto; width: 75%;">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Seller</th>
+            <th scope="col">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for order in order_items %}
+            <tr>
+                <th scope="row"></th>
+                <td>{{order.product.name}}</td>
+                {% if order.agreed_price %}
+                <td>${{order.agreed_price}}</td>
+                {% else %}
+                <td>${{order.product.price}} <a href="{% url 'nego_results' order.id %}"  class="btn btn-primary">negotiate</a></td>
+                {% endif %}
+                <td> 
+                  {{order.quantity}}
+                  <button  style="background: none; border: none;" type="submit"><i class="fa-solid fa-plus update-cart" data-product ='{{order.product.id}}' data-action="add"></i></button>
+                  <button  style="background: none; border: none;" type="submit"><i class="fa-solid fa-minus update-cart" data-product ='{{order.product.id}}' data-action="remove"></i></button>
+                <td>{{order.product.seller}}</td>
+                {% if order.agreed_price %}
+                  <td>{{order.get_new_total}}</td>
+                {% else %}
+                <td>{{order.get_total}}</td>
+                {% endif%}
+
+
+              </tr>
+            
+            
+          {%endfor%}
+          <tr>
+            <td colspan="7">Sum:</td>
+          </tr>
+          <tr>
+            <th>Total Items</th>
+            <td colspan="3">{{order.get_cart_total}}</td>
+            <th>Grand total</th>
+      
+            <td ><b>${{order.get_grand_total}}</b></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="container">
+        <a class="btn btn-outline-success"  href="{% url 'checkout' %}">checkout</a>
+                  
+      </div>
+      <script src="{% static 'scripts/cart.js' %}"></script>
+
+</div>
+
+{% endblock %}

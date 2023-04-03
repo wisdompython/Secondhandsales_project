@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block content%}
+<div class="container" style="margin: 60px auto; width: 70%;">    
+    <div style="border: none;" class="card">
+        <a style="margin-right: 10px; width: fit-content;" href="{% url 'orders' %}" class="btn btn-outline-success btn-sm">Go back</a>
+        <h1>Order Summary</h1>
+    </div>
+    <div  class="card d-flex flex-row">
+        {% for order_summary in order_summary %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{order_summary.product.name}}</h5>
+                        <p class="card-text">Items :  <b>{{order_summary.quantity}}</b></p>
+                        {% if order_summary.agreed_price%}
+                        <p class="card-text">Price :  ${{order_summary.get_new_total}}</p>
+                        {% else %}
+                        <p class="card-text">Price :  ${{order_summary.get_total}}</p>
+                        {%endif%}
+                    </div>
+        {%endfor%}
+    </div>
+        <div style="margin-bottom: 30px; margin-top: 20px;">
+            <h4 class="card-text">Total : ${{order.get_grand_total}}</h4>
+        </div> 
+    </div>   
+    <div class="shipping container" style="margin-top: 100px; width: 70%;" id="shipping-form">
+        <form id="user-form">
+            
+        </form>
+        <form id="form">
+            <div>
+                <h2>Shipping Form</h2>
+            </div>
+            <div id="user-info" class="user">
+                <div class="mb-3 col-sm-7">
+                    <label for="name" class="form-label">Name</label>
+                    <input required type="text" class="form-control " id="user-name" >
+                </div>
+                <div class="mb-3 col-sm-7">
+                    <label for="email" class="form-label">Email address</label>
+                    <input required  type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+            </div>
+           <div id="shipping-address" class="ship">
+            <div  class="mb-3 col-sm-7">
+                <label for="address" class="form-label">Address</label>
+                <input required  type="text" class="form-control" id="address">
+              </div>
+              <div class="mb-3 col-sm-7">
+                <label for="city" class="form-label">City</label>
+                <input required  type="text" class="form-control" id="city">
+              </div>
+              <div class="mb-3 col-sm-7">
+                <label for="state" class="form-label">State</label>
+                <input required  type="text" class="form-control" id="state">
+              </div>
+              <div class="mb-3 col-sm-7">
+                <label class="form-label" for="zipCode">Zipcode</label>
+                <input required  type="text" class="form-control" id="zipcode">
+                
+              </div>
+           </div>
+            
+            <button id="form-submit" class="btn btn-primary">Submit</button>
+        </form>
+        <div id="payment" class="payment-section d-none"><button id="payment-button" class="btn btn-outline-success" >Make Payment</button></div>
+
+    </div>
+    
+</div>
+<script type="text/javascript" >
+    var shipping = "{{order.ship}}"
+    var total = '{{order.get_cart_total}}'
+
+    if(shipping =='False'){
+        document.getElementById('shipping-address').innerHTML = ''
+    }
+   
+
+    
+    var shipping_form = document.getElementById('form')
+    
+    shipping_form.addEventListener('submit', function(e){
+        e.preventDefault()
+        document.getElementById("form-submit").classList.add("d-none")
+        document.getElementById("payment").classList.remove('d-none')
+       
+    });
+    console.log(document.getElementById('form-submit'))
+    document.getElementById('payment-button').addEventListener('click', function(){
+        SubmitForm()
+    })
+    
+    function SubmitForm(){
+        console.log('working')
+
+        var FormData = {
+            'name':null,
+            'total':total
+        }
+//
+        var shippingInfo = {
+            'address':null,
+            'city':null,
+            'state':null,
+            'zipcode':null
+        }
+
+
+        if(shipping != 'False'){ 
+            shippingInfo.address = shipping_form.address.value
+            shippingInfo.city = shipping_form.city.value
+            shippingInfo.state = shipping_form.state.value
+            shippingInfo.zipcode= shipping_form.zipcode.value
+        }
+
+        if (user != 'AnonymousUser'){
+            FormData.name = shipping_form.name.value
+        }
+
+    var url= '/process-order/'
+    fetch(url, {
+        method:'POST',
+        headers:{'Content-Type': 'application/json','X-CSRFToken': csrftoken},
+        body : JSON.stringify({'form':FormData, 'shipping':shippingInfo})
+
+    })
+
+    .then((response)=> {
+        return response.json()
+        
+    })
+    .then((data)=> {
+        console.log('data:', data)
+        location.reload()
+    })
+}
+</script>
+{% endblock%}

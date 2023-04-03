@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static%} 
+
+
+{% block content%}
+
+<div class="container overflow-hidden">
+    <div class="row gx-5" style="margin: 50px auto; width: 90%;">
+    {%for product in product %}
+      <div class="col-sm-auto" style="margin-bottom: 50px;">
+        <div class="card " style="width: 18rem; font-size: 15px; ">
+          <img src="{{product.image.url}}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">{{product.name}}</h5>
+              <p class="card-text">{{product.description}}</p>
+              <p class="card-text" style="color: rgb(46, 46, 155);font-weight: bolder;">$ {{product.price}}</p>
+              <button  style="width: 60px; font-size: 10px;" data-product = '{{product.id}}' data-action = '' class="btn btn-outline-success update-cart" type="submit">Add to Cart</button>
+              <a class="card-link" href="{% url 'QA-section' product.id %}">Forum</a>
+              <a href="{% url 'product-detail' product.id%}" class="card-link">View</a>
+              {% if product.seller == request.user %}
+              <a href="{% url 'update_product' product.id%}" class="card-link">Edit</a>
+              {%endif%}
+
+            </div>
+        </div>
+      </div>    
+    {%endfor %}
+    <script src="{% static 'scripts/cart.js' %}"></script>
+  </div>
+{% endblock%}
+

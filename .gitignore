@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
+media/
+db.sqlite3
+sent_emails
 
 # C extensions
 *.so

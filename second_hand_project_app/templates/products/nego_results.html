@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static%} 
+{% load crispy_forms_tags %}
+{% block content%}
+
+
+<div class="container" style="margin: 40px auto ; width: 60%;">
+        <h3 style="margin: 10px auto; width: 80%;" >Negotiations for {{order_item.product}}</h3>
+        {% for nego in nego_results%}
+            <div class="card" style="margin: 40px auto ; width: 60%; padding:10px ; border-top: solid; border-radius: 15px;">
+                <p class="card-text"> From : <b>{{nego.author}}</b> To : <b>{{nego.sent_to}}</b></p>
+                <p class="card-text">Product Price: ${{nego.order_item.product.price}}</p> 
+                <p class="card-text">bargain : {{nego.body}}</p>
+                <p class="card-text"></p>
+            </div>
+        {% endfor%}
+        
+    <div class="container" style="margin: 80px auto; width: 60%;">
+        <form action="" method="post">
+            {% csrf_token%}
+            {{form|crispy}}
+            <button class="btn btn-outline-success" style="margin-top: 10px;" type="submit">Submit</button>
+        </form>
+            {% if request.user == order_item.product.seller %}
+                <div id="complete-negotiation"  class="complete-Payment">
+                    <button type="submit" id="finish">Finish Negotiations</button>
+                </div>
+                <div id="nego-form" class='agreement-form d-none'>
+                    <form id="finish-negotiation-form">
+                        <div  class="mb-3 col-sm-7">
+                            <label for="price" class="form-label">Agreed Price</label>
+                            <input required  type="text" class="form-control" id="price">
+                            <button id="payment-button">Finish</button>
+                        </div>
+                    </form>
+                </div>
+            {% endif%}
+        
+    </div>
+    
+</div>
+    
+<script type="text/javascript">
+    var order_item = '{{order_item.id}}' // grab the order_item id
+    var FinishNegotiation = document.getElementById('finish') // get the button class finish, if user is seller of product, he can change the price
+    FinishNegotiation.addEventListener('click', function(){
+        document.getElementById('nego-form').classList.remove('d-none') // remove hidden form, once clicked
+        
+    });
+    var Uform = document.getElementById('price') // get the form with price field
+    document.getElementById('payment-button').addEventListener('click', function(e){
+        e.preventDefault()
+        var form_data = { // grab the form content and order_item, it will sent as a post request to the backend
+            'price':Uform.value,
+            'id' : order_item
+        }
+        SubmitForm(form_data) // call the function on submitting the form
+    })
+    
+    function SubmitForm(form_data){
+        var url = '/process-negotiation/' // url to the backend view that handles this request
+        
+    fetch(url, {
+        method:'POST',
+        headers:{'Content-Type': 'application/json','X-CSRFToken': csrftoken}, // django csrf token to submit form
+        body : JSON.stringify({'price':form_data.price, 'id':form_data.id}) // jsonify the data
+
+
+    })
+
+    .then((response)=> {
+        return response.json()
+        
+    })
+    .then((data)=> {
+        
+        window.location.href =''
+
+        alert('Negotiation Completed')
+        
+    })
+}
+</script>
+
+
+{%endblock%}

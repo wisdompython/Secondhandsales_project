@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content%}
+{% load static %}
+{% load crispy_forms_tags %}
+<div class="card" style="width: 60%; margin: 50px auto; border: none;">
+    <div class="card-body">
+      <h1 class="card-title" style="width: 90%; margin-left:35%;">{{product.name}}</h1>
+      <h4 class="card-title"> Features</h4>
+      <p class="card-text">{{product.features}}</p>
+      <h4 class="card-title">Category</h4>
+      <div style="display: block; ">
+        {% for category in product.category.all%}
+          {% if category %}
+          <li class="card-text">{{category}}</li>
+          
+        {% endif %}
+      </div>
+      
+      {% endfor %}
+      {% if product.reason_for_sale %}
+          <h4 class="card-title">Reason for sale</h4>
+          <p class="card-text">{{product.reason_for_sale}}</p>
+        {% endif %}
+        {% if product.condition %}
+          <h4 class="card-title">Condition</h4>
+          <p class="card-text">{{product.condition}}</p>
+        {% endif %}
+        {% if product.size %}
+          <h4 class="card-title">Size</h4>
+          <p class="card-text">{{product.size}}</p>
+        {% endif %}
+        {% if product.usage_duration %}
+          <h4 class="card-title">Usage Period</h4>
+          <p class="card-text">{{product.usage_duration}}</p>
+        {% endif %}
+      <h4 class="card-title"> Price </h4>
+      <p class="card-text" style="color: blue ; font-weight: bolder;">${{product.price}}</p>
+      <a href="" data-product = '{{product.id}}' data-action = '' class="btn btn-primary update-cart" style="width: fit-content;"> Order Now</a>
+      <div class="reviews container" >
+        <form method="post">
+          <h3>Write A Review</h3>
+          {% csrf_token%}
+          {{form|crispy}}
+          <button class="btn btn-outline-success" style="margin-top: 10px;" type="submit">Submit</button>
+        </form>
+
+        <div class="comments container" style="width: 80%; margin-top: 30px; margin-left: 0%;">
+          {% for comment in comment %}
+        <div class="card" style="margin-bottom: 15px; border-radius: 15px;">
+          <p class="card-text" style="padding: 5px;"> <b> By : {{comment.author}}</b> </p>
+          <p class="card-body"> {{comment.body}}</p>
+        </div>
+        
+        {%endfor%}
+        </div>
+        
+      </div>
+    </div>
+  
+      
+      <script src="{% static 'scripts/cart.js' %}"></script>
+  </div>
+{% endblock%}
