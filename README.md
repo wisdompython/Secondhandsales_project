@@ -7,10 +7,10 @@
 
 ## TECHNOLOGIES
 
-* [JavaScript]
+* [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 * [django](https://docs.djangoproject.com/en/4.1/)
 * [django-tinymce](https://django-tinymce.readthedocs.io/en/latest/)
-* [BootStrap5]
+* [BootStrap5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
 
 
 ## SETUP AND INSTALLATION
