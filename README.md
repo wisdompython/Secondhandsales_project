@@ -17,3 +17,11 @@
 
 * Make a git pull or download as a zip file
 * run python manage.py runserver
+
+## Features
+* create a new product
+* leave a review for your products
+* QA section - for questions and answers
+* checkout system
+* Negotiation platform : you can negotiate with a buyer and get an update price for your order
+  
